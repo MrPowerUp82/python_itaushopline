@@ -1,16 +1,16 @@
 from setuptools import setup
 
 setup(
-    name = 'itaushopline',
+    name = 'python_itaushopline',
     version = '1.0.0',
     author = 'MrPowerUp',
     author_email = 'gustavohenrique8282@hotmail.com',
     packages = ['python_itaushopline'],
     description = 'Lib para consultas e pagamentos via Itaú Shopline.',
     long_description = 'Lib (Classe) para gerar a DC com objetivo de realizar consultas e pagamentos via Itaú Shopline.',
-    url = 'https://github.com/MrPowerUp82/itaushopline',
+    url = 'https://github.com/MrPowerUp82/python_itaushopline',
     project_urls = {
-        'Código fonte': 'https://github.com/MrPowerUp82/itaushopline',
+        'Código fonte': 'https://github.com/MrPowerUp82/python_itaushopline',
     },
     license = 'MIT',
     keywords = 'API ItaúShopline Itaú',
