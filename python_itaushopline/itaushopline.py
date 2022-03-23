@@ -1,5 +1,7 @@
 from unicodedata import normalize
 import random
+from lxml import html
+import requests
 
 class ItauShopline():
 
@@ -24,6 +26,7 @@ class ItauShopline():
     }
         self.codigo = codigo
         self.chave = chave
+        self.chave_itau = 'SEGUNDA12345ITAU'
 
     def tirar_acento(self,text):
         clean_text = normalize('NFKD',text).encode('ASCII','ignore').decode('ASCII')
@@ -39,7 +42,7 @@ class ItauShopline():
         return str(pedido).rjust(8,'0')
 
     def clean_inscri(self, x):
-        return x.rjust(2,'0')
+        return str(x).rjust(2,'0')
 
     def random_char(self):
         char_list = 'abcdefghijklmnopqrstuvwxyz'.upper()
@@ -71,7 +74,7 @@ class ItauShopline():
         for j in range(0,256):
             self.idxs.append('')
             self.asc_codes.append('')
-            self.asc_codes[j] = ord(chave[j % len(chave):j % (len(chave)+1)])
+            self.asc_codes[j] = ord(chave[j % len(chave):(j % len(chave))+1])
             self.idxs[j] = j
 
         l = 0
@@ -93,6 +96,25 @@ class ItauShopline():
         return ''.join(data_random)
 
 
+    def consultar(self):
+        url = 'https://shopline.itau.com.br/shopline/consulta.aspx'
+        page = requests.post(url, data={'DC':self.dc})
+    
+        tree = html.fromstring(page.content)
+        
+        data1 = tree.xpath('//td[@class="txt_cinza_n"]/text()')
+        data2 = tree.xpath('//td[@class="txt_lrj"]/b/text()')
+        data1 = [x.replace('\n','').replace('\r','').strip(' ') for x in data1]
+        data1 = [x.encode('iso-8859-1') for x in data1]
+        data1 = [x.decode('utf-8') for x in data1]
+        data2 = [x.replace('\n','').replace('\r','').strip(' ') for x in data2]
+
+        context = {}
+        for i,j in zip(data2,data1):
+            context[i] = j
+
+        return context
+
     def init(self, **kwargs):
         self.data = kwargs
         try:
@@ -111,6 +133,23 @@ class ItauShopline():
             exit()
 
         for key in kwargs.keys():
-            kwargs[key] = kwargs[key][0:self.KEYS_MAP[key]]
 
-        chave1 = 'Parei aqui'
+            if key == 'nome':
+                kwargs[key] = self.tirar_acento(kwargs[key])
+            if key == 'vencimento':
+                kwargs[key] = self.clean_date(kwargs[key])
+            if key == 'valor':
+                kwargs[key] = self.clean_valor(kwargs[key])
+            if key == 'pedido':
+                kwargs[key] = self.clean_pedido(kwargs[key])
+            if key == 'codigo_inscricao':
+                kwargs[key] = self.clean_inscri(kwargs[key])
+
+            if type(kwargs[key]) == type('MrPowerUp'):
+                kwargs[key] = kwargs[key][0:self.KEYS_MAP[key]]
+
+        chave1 = self.operacao(''.join([kwargs[key] for key in kwargs.keys()]),self.chave)
+        chave2 = self.operacao(''.join([self.codigo, chave1]),self.chave_itau)
+        self.dc = self.converte(chave2)
+
+        return self.dc
