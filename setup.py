@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name = 'python-itaushopline',
-    version = '1.0.1',
+    version = '1.0.2',
     author = 'MrPowerUp',
     author_email = 'gustavohenrique8282@hotmail.com',
     packages = ['itaushopline'],

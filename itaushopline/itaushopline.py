@@ -120,16 +120,16 @@ class ItauShopline():
         try:
             if(len(self.chave) != 16 and len(self.codigo) != 26):
                 raise Exception('Valores de Entrada inválidos! (chave/código)')
-        except Exception:
-            print(Exception)
+        except Exception as e:
+            print(str(e))
             exit()
 
         try:
             for key in kwargs.keys():
                 if key not in self.KEYS_MAP.keys():
                     raise Exception('Valores de Entrada inválidos! (informações)')
-        except Exception:
-            print(Exception)
+        except Exception as e:
+            print(str(e))
             exit()
 
         for key in kwargs.keys():
