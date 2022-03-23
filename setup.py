@@ -1,11 +1,11 @@
 from setuptools import setup
 
 setup(
-    name = 'python_itaushopline',
-    version = '1.0.0',
+    name = 'python-itaushopline',
+    version = '1.0.1',
     author = 'MrPowerUp',
     author_email = 'gustavohenrique8282@hotmail.com',
-    packages = ['python_itaushopline'],
+    packages = ['itaushopline'],
     description = 'Lib para consultas e pagamentos via Itaú Shopline.',
     long_description = 'Lib (Classe) para gerar a DC com objetivo de realizar consultas e pagamentos via Itaú Shopline.',
     url = 'https://github.com/MrPowerUp82/python_itaushopline',
